@@ -1,0 +1,69 @@
+<%- include('./common/header') %>
+  <div class="container hero-list">
+    <a class="btn btn-success pull-right" href="./add">添加英雄</a>
+    <table class="table table-hover">
+      <thead>
+        <th>编号</th>
+        <th>名称</th>
+        <th>性别</th>
+        <th>年龄</th>
+        <th>地址</th>
+        <th>创建时间</th>
+        <th>操作</th>
+      </thead>
+      <tbody>
+       
+      </tbody>
+    </table>
+    <script type="text/html" id="template">
+      {{ each data }}
+      <tr>
+        <td>{{ $index + 1 }}</td>
+        <td>{{ $value.name }}</td>
+        <td>{{ $value.gender }}</td>
+        <td>{{ $value.age }}</td>
+        <td>{{ $value.address }}</td>
+        <td>{{ $value.date }}</td>
+        <td>
+          <a href="./info?id={{ $value.id }}">查看</a>
+          <a href="./edit?id={{ $value.id }}">编辑</a>
+          <a href="javascript:;" data-id="{{ $value.id }}" class="btn-del">删除</a>
+        </td>
+      </tr>
+     {{ /each }}
+    </script>
+  </div>
+  <%- include('./common/footer') %>
+  <script src="/node_modules/art-template/lib/template-web.js"></script>
+  <script>
+    $(function() {
+      init()
+      function init() {
+        $.get({
+          url: '/getHeroInfo',
+          success: function(res) {
+            if (res.code == 200) {
+              let str = template('template', res)
+              $("tbody").html(str)
+            }
+          }
+        })
+      }
+
+      // delete 
+      $("tbody").on("click", ".btn-del", function() {
+        let id = $(this).attr('data-id')
+        $.get({
+          url: '/delOneHeroInfo',
+          data: {
+            id: id
+          },
+          success: function(res) {
+            if (res.code == 200) {
+              init()
+            }
+          }
+        })
+      })
+    })
+  </script>

@@ -1,0 +1,33 @@
+<%- include('./common/header') %>
+  <div class="container hero-list">
+    
+  </div>
+</body>
+<script type="text/html" id="template">
+    <p><strong class="text-success">Id: </strong>{{id}}</p>
+    <p><strong class="text-success">姓名: </strong>{{name}}</p>
+    <p><strong class="text-success">性别: </strong>{{gender}}</p>
+    <p><strong class="text-success">年龄: </strong>{{age}}</p>
+    <p><strong class="text-success">地址: </strong>{{address}}</p>
+    <p><strong class="text-success">添加时间: </strong>{{date}}</p>
+</script>
+</html>
+<script src="/node_modules/jquery/dist/jquery.js"></script>
+<script src="/node_modules/art-template/lib/template-web.js"></script>
+<script>
+  $(function() {
+    $.get({
+      url: '/getOneHeroInfo',
+      data: {
+        id: location.search.split('=')[1]
+      },
+      dataType: 'json',
+      success: function(res) {
+        if (res.code == 200) {
+          let str = template('template', res.data[0])
+          $(".hero-list").html(str)
+        }
+      }
+    })
+  })
+</script>
